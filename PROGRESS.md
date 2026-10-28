@@ -1,6 +1,55 @@
 # Progreso
 
-## Trabajo actual: ninguno
+## Trabajo actual: GHP-PERFIL-6 panel de control y barra de tareas  (rama tarea/perfil-panel-6)
+- Etapas: [x] 1 dos SVG nuevos (commit en esta rama) · [ ] 2 README, DECISIONS y cierre
+- Ciclo: etapas aprobadas 0, auditoría pendiente, rondas 0
+- Línea base de pruebas: el proyecto no tiene pruebas automáticas; verificación manual.
+- Pendiente / bloqueos: ninguno. Etapa 1: `assets/ventana-panel-de-control.svg` (830 × 510, 4 × 3 iconos, 34 768 bytes) y `assets/barra-de-tareas.svg` (830 × 72, 5 345 bytes), generados con un script fuera del repo (`tmp/panel.py`).
+### Orden completa
+Proyecto: profile-github — D:\Proyectos\profile-github
+Id: GHP-PERFIL-6
+Tamaño: normal — 2 SVG nuevos + README + DECISIONS + PROGRESS, sin lógica ni workflow
+Etiqueta antes-de-*: sí (antes-de-perfil-panel-6)
+Tipo de solicitud: implementación
+Autorizado: actualizar main local con `git pull --ff-only`, crear la rama tarea/perfil-panel-6 y la etiqueta local antes-de-perfil-panel-6, editar los archivos del alcance y hacer un commit local por etapa verificada.
+No autorizado: push, PR, merge, tocar el workflow, scripts/, los banners ni las ventanas existentes, ajustes de la cuenta de GitHub, editar D:\Proyectos\portafolio-v2 o D:\Proyectos\mrKanoh.github.io (solo lectura).
+
+Objetivo
+El README muestra, después del desfragmentador, una ventana «PANEL DE CONTROL» con las herramientas de Ariel como iconos retro y, al final, una barra de tareas estilo Windows 95 con «Inicio» y «2026», ambas coherentes con las ventanas existentes y legibles a 375 px.
+
+Contexto
+Textos visibles aprobados por Ariel (2026-10-28), sin agregar otros:
+- Título de ventana: «PANEL DE CONTROL».
+- Herramientas, una etiqueta por icono, en este orden: HTML, CSS, JavaScript, TypeScript, React, Astro, Node.js, Tailwind, Git, Python, Figma, FigJam (lista del CV aprobado en elari.work, «código + diseño»).
+- Barra de tareas: botón «Inicio» a la izquierda y «2026» fijo a la derecha.
+Estoy suponiendo estos alt (texto no visible, accesible): «Panel de control con las herramientas que uso: HTML, CSS, JavaScript, TypeScript, React, Astro, Node.js, Tailwind, Git, Python, Figma y FigJam» y «Barra de tareas retro con el botón Inicio y el año 2026». Regístralos en DECISIONS.md como suposición del orquestador.
+
+Alcance
+- Incluye:
+  R1. `assets/ventana-panel-de-control.svg`: misma construcción que `assets/ventana-cv.svg` y `assets/ventana-desfragmentador.svg` (paleta, borde, barra de título oscura, texto convertido a trazados como ellas, sin fuentes externas). Ancho 830 como el desfragmentador; alto el que pida una cuadrícula de 12 iconos (p. ej. 6 × 2) legible al escalar a 343 px. Iconos dibujados originales y genéricos estilo Windows 95 (carpeta, documento, engranaje, etc.), con la etiqueta de texto debajo: no copies logos oficiales de marcas.
+  R2. `assets/barra-de-tareas.svg`: franja de 830 de ancho, botón «Inicio» con un icono pequeño original (p. ej. el disquete AMR simplificado si ya existe en los banners, o un cuadrado genérico) y «2026» en un recuadro hundido a la derecha. Sin animación; si agregas alguna, debe respetar `prefers-reduced-motion`.
+  R3. README: agregar las dos imágenes después del desfragmentador, con `width`/`height` reales y los alt del Contexto; sin enlaces. No cambies nada más del README.
+  R4. DECISIONS.md: entrada «2026-10-28 — Panel de control y barra de tareas (GHP-PERFIL-6; textos aprobados por Ariel)» con textos, medidas, alt y la regla de iconos originales. PROGRESS.md: trabajo actual y, al cerrar, la entrada en Terminados.
+- No incluye: datos en vivo, cambios al workflow o al generador, enlaces nuevos, otros textos.
+
+Tarea (detente e informa al cerrar cada etapa; espera «Aprobado» del orquestador)
+Etapa 1: rama tarea/perfil-panel-6 desde main actualizada, etiqueta antes-de-perfil-panel-6, R1 y R2 (solo los dos SVG). Verifica y haz commit.
+Etapa 2: R3 y R4, revisión visual del README completo, verifica y haz commit de cierre con PROGRESS.md cerrado.
+
+Restricciones
+- Español neutro con «tú» en documentación.
+- No refactorices ni reformatees archivos existentes.
+- Nada de `<script>`, `href` externos, `@import` ni `url(http` en los SVG.
+
+Verificación (rápidas, en cada etapa)
+- `git diff --check`, `git status --short --branch`, `git show --stat HEAD`.
+- SVG bien formados con `python -c "import xml.etree.ElementTree as E,sys;[E.parse(f) for f in sys.argv[1:]]" assets/*.svg`; grep sin `<script`, `href="http`, `@import`, `url(http`; tamaño en bytes de cada SVG nuevo.
+- Revisión visual en el navegador a 1280 px y 375 px de ancho (etapa 1: los dos SVG; etapa 2: el README renderizado), con capturas en el informe.
+- Etapa 2: `gh api markdown -f mode=gfm -f context=mrKanoh/mrKanoh -F text=@README.md` y confirmar que las `<img>` nuevas sobreviven con su alt.
+Lenta: no hay (sin pruebas automáticas).
+
+Cierre
+Informa: resultado, archivos modificados, verificaciones con su salida real, capturas, problemas (separa los preexistentes) y siguiente paso.
 
 ## Terminados
 - 2026-10-28 GHP-PERFIL-5 — PROGRESS.md al día tras la fusión de GHP-PERFIL-4 · Ciclo: etapas aprobadas 1, auditoría no aplica (tarea chica), rondas 0 · commit el de esta tarea (rama tarea/perfil-progress-5) · pendiente: PR y fusión por Ariel.
