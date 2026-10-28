@@ -89,8 +89,10 @@ def semanas_de(respuesta):
     """
     if not isinstance(respuesta, dict):
         raise ErrorDatos("respuesta sin calendario")
-    if respuesta.get("errors"):
-        raise ErrorDatos(f"GraphQL devolvió {len(respuesta['errors'])} error(es)")
+    errores = respuesta.get("errors")
+    if errores:
+        cuantos = f"{len(errores)} error(es)" if isinstance(errores, list) else "errores"
+        raise ErrorDatos(f"GraphQL devolvió {cuantos}")
     try:
         semanas = respuesta["data"]["user"]["contributionsCollection"]["contributionCalendar"]["weeks"]
         dias = [d for s in semanas for d in s["contributionDays"]]
