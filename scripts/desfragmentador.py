@@ -5,8 +5,8 @@ Solo biblioteca estándar de Python 3. Uso:
   python scripts/desfragmentador.py --vacio    # calendario sin actividad, sin red
   python scripts/desfragmentador.py --entrada respuesta.json --salida tmp/x.svg
 
-Si la consulta falla o la respuesta no trae un año de días, sale con código 1
-y no escribe el SVG. Misma entrada → mismos bytes.
+Si la consulta falla o la respuesta no trae un año de días y su total de
+contribuciones (entero ≥ 0), sale con código 1 y no escribe el SVG. Misma entrada → mismos bytes.
 """
 import argparse
 import datetime
@@ -38,6 +38,7 @@ CONSULTA = """query($login: String!) {
   user(login: $login) {
     contributionsCollection {
       contributionCalendar {
+        totalContributions
         weeks { contributionDays { date weekday contributionLevel } }
       }
     }
@@ -49,7 +50,9 @@ ANCHO, ALTO = 830, 312
 BARRA = 54
 SEMANAS = 53
 PASO, BLOQUE = 14.5, 11
-REJILLA_X, REJILLA_Y = 32.5, 84
+REJILLA_X, REJILLA_Y = 32.5, 124
+TOTAL_BASE = 99
+MAX_TOTAL = 9_999_999
 SEGMENTOS, SEG_PASO, SEG_ANCHO = 16, 28, 24
 SEG_X, SEG_Y, SEG_ALTO = 353.5, 266, 16
 
@@ -83,7 +86,7 @@ def consultar(usuario, token):
 
 
 def semanas_de(respuesta):
-    """Valida la respuesta y devuelve las semanas como listas de (weekday, nivel).
+    """Valida la respuesta y devuelve (total, semanas); semanas son listas de (weekday, nivel).
 
     Los logs de Actions son públicos: los errores nombran el índice del día, nunca su fecha ni nivel.
     """
@@ -94,10 +97,14 @@ def semanas_de(respuesta):
         cuantos = f"{len(errores)} error(es)" if isinstance(errores, list) else "errores"
         raise ErrorDatos(f"GraphQL devolvió {cuantos}")
     try:
-        semanas = respuesta["data"]["user"]["contributionsCollection"]["contributionCalendar"]["weeks"]
+        calendario = respuesta["data"]["user"]["contributionsCollection"]["contributionCalendar"]
+        total = calendario["totalContributions"]
+        semanas = calendario["weeks"]
         dias = [d for s in semanas for d in s["contributionDays"]]
     except (KeyError, TypeError):
         raise ErrorDatos("respuesta sin calendario") from None
+    if isinstance(total, bool) or not isinstance(total, int) or not 0 <= total <= MAX_TOTAL:
+        raise ErrorDatos("totalContributions inválido")
     # El calendario trae un año completado hasta el domingo inicial: 365–371 días.
     if not 364 <= len(dias) <= 371:
         raise ErrorDatos(f"se esperaban ≈ 365 días y llegaron {len(dias)}")
@@ -115,18 +122,29 @@ def semanas_de(respuesta):
         if anterior and fecha - anterior != datetime.timedelta(days=1):
             raise ErrorDatos(f"día {i}: no es consecutivo al anterior")
         anterior = fecha
-    return [[(d["weekday"], d["contributionLevel"]) for d in s["contributionDays"]] for s in semanas]
+    return total, [[(d["weekday"], d["contributionLevel"]) for d in s["contributionDays"]] for s in semanas]
 
 
 def semanas_vacias():
-    return [[(w, "NONE") for w in range(7)] for _ in range(SEMANAS)]
+    return 0, [[(w, "NONE") for w in range(7)] for _ in range(SEMANAS)]
 
 
 def texto(textos, nombre, x, base, color):
     return f'<path transform="translate({num(x)} {num(base)})" d="{textos[nombre]["d"]}" fill="{color}"/>'
 
 
-def svg(semanas, textos):
+def total_en_trazados(textos, total, x, base, color):
+    """«<N> contribuciones en el último año» (singular si N = 1): dígitos y frase como trazados."""
+    partes = []
+    for digito in str(total):
+        partes.append(texto(textos, f"D{digito}", x, base, color))
+        x += textos[f"D{digito}"]["ancho"]
+    frase = "CONTRIB_1" if total == 1 else "CONTRIB_N"
+    partes.append(texto(textos, frase, x, base, color))
+    return partes
+
+
+def svg(total, semanas, textos):
     # Últimas 53 columnas, como el calendario; el carbón queda donde no hay día.
     bloques = {color: [] for color in (MARFIL, AZUL, NARANJA)}
     for col, semana in enumerate(semanas[-SEMANAS:]):
@@ -136,14 +154,6 @@ def svg(semanas, textos):
             bloques[NIVELES[nivel]].append(f"M{num(x)} {num(y)}h{BLOQUE}v{BLOQUE}h-{BLOQUE}z")
     rejilla_ancho = SEMANAS * PASO - (PASO - BLOQUE)
     rejilla_alto = 7 * PASO - (PASO - BLOQUE)
-
-    # Leyenda: muestra carbón con el bloque dentro, y su texto.
-    leyenda, x = [], REJILLA_X - 4
-    for color, nombre in ((MARFIL, "SIN"), (AZUL, "POCA"), (NARANJA, "MUCHA")):
-        leyenda.append(f'<rect x="{num(x)}" y="215" width="22" height="22" fill="{CARBON}"/>')
-        leyenda.append(f'<rect x="{num(x + 4)}" y="219" width="14" height="14" fill="{color}"/>')
-        leyenda.append(texto(textos, nombre, x + 32, 236.5, CARBON))
-        x += 32 + textos[nombre]["ancho"] + 36
 
     seg_total = SEGMENTOS * SEG_PASO
     llenos = "".join(
@@ -170,7 +180,7 @@ def svg(semanas, textos):
     for color, ds in bloques.items():
         if ds:
             partes.append(f'<path d="{"".join(ds)}" fill="{color}"/>')
-    partes += leyenda
+    partes += total_en_trazados(textos, total, REJILLA_X - 4, TOTAL_BASE, CARBON)
     partes += [
         texto(textos, "ESTADO", REJILLA_X - 4, 284.5, CARBON),
         f'<rect x="{num(SEG_X - 4)}" y="{SEG_Y - 4}" width="{seg_total - (SEG_PASO - SEG_ANCHO) + 8}" height="{SEG_ALTO + 8}" fill="{CARBON}"/>',
@@ -195,7 +205,7 @@ def main():
         textos = json.load(f)
     try:
         if args.vacio:
-            semanas = semanas_vacias()
+            total, semanas = semanas_vacias()
         else:
             if args.entrada:
                 try:
@@ -208,12 +218,12 @@ def main():
                 if not token:
                     raise ErrorDatos("falta GITHUB_TOKEN o GH_TOKEN")
                 respuesta = consultar(args.usuario, token)
-            semanas = semanas_de(respuesta)
+            total, semanas = semanas_de(respuesta)
     except ErrorDatos as e:
         print(f"desfragmentador: {e}; no se escribe el SVG", file=sys.stderr)
         return 1
 
-    contenido = svg(semanas, textos)
+    contenido = svg(total, semanas, textos)
     temporal = args.salida + ".tmp"
     with open(temporal, "w", encoding="utf-8", newline="\n") as f:
         f.write(contenido)
