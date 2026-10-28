@@ -11,7 +11,7 @@ El proyecto no tiene pruebas automáticas. La verificación es manual, con evide
 
 1. `git diff --check` y `git status --short --branch`.
 2. SVG: bien formados con un parser XML (p. ej. `xml.etree` de Python), sin `<script>`, sin `href` externos, sin `@import` ni `url(http`; tamaño en bytes.
-3. Revisión visual de ambos SVG en el navegador a 1280 px y 375 px de ancho, con y sin movimiento reducido (capturas en el informe).
+3. Revisión visual de todos los SVG de `assets/` (banners, ventanas-enlace y la del desfragmentador) en el navegador a 1280 px y 375 px de ancho, con y sin movimiento reducido (capturas en el informe).
 4. README: `gh api markdown -f mode=gfm -f context=mrKanoh/mrKanoh -F text=@README.md` y comprobar que `<picture>`/`<source>` sobreviven al saneado.
 5. Workflow: `actionlint .github/workflows/desfragmentador.yml` sin errores; `permissions` solo `contents: write`; acciones fijadas por SHA de commit con el tag en comentario; el paso de commit solo agrega `assets/ventana-desfragmentador.svg`.
 6. Generador: `python scripts/desfragmentador.py --vacio --salida tmp/a.svg` dos veces con el mismo hash; con una respuesta inválida (`--entrada`) sale con código 1 sin escribir. Los datos reales solo se generan en `tmp/` (ignorado).

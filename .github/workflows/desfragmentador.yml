@@ -36,4 +36,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add assets/ventana-desfragmentador.svg
           git commit -m "desfragmentador: actualiza la actividad del último año"
+          # Integra main si avanzó desde el checkout; si otro commit tocó el SVG, falla sin forzar.
+          git pull --rebase origin main
           git push origin HEAD:main

@@ -10,10 +10,10 @@ y no escribe el SVG. Misma entrada → mismos bytes.
 """
 import argparse
 import datetime
+import http.client
 import json
 import os
 import sys
-import urllib.error
 import urllib.request
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -77,14 +77,20 @@ def consultar(usuario, token):
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
             return json.load(r)
-    except (urllib.error.URLError, ValueError) as e:
+    except (OSError, ValueError, http.client.HTTPException) as e:
+        # URLError y TimeoutError son OSError; el texto no incluye el token ni datos.
         raise ErrorDatos(f"consulta fallida: {e}") from None
 
 
 def semanas_de(respuesta):
-    """Valida la respuesta y devuelve las semanas como listas de (weekday, nivel)."""
+    """Valida la respuesta y devuelve las semanas como listas de (weekday, nivel).
+
+    Los logs de Actions son públicos: los errores nombran el índice del día, nunca su fecha ni nivel.
+    """
+    if not isinstance(respuesta, dict):
+        raise ErrorDatos("respuesta sin calendario")
     if respuesta.get("errors"):
-        raise ErrorDatos(f"GraphQL devolvió errores: {respuesta['errors']}")
+        raise ErrorDatos(f"GraphQL devolvió {len(respuesta['errors'])} error(es)")
     try:
         semanas = respuesta["data"]["user"]["contributionsCollection"]["contributionCalendar"]["weeks"]
         dias = [d for s in semanas for d in s["contributionDays"]]
@@ -94,14 +100,18 @@ def semanas_de(respuesta):
     if not 364 <= len(dias) <= 371:
         raise ErrorDatos(f"se esperaban ≈ 365 días y llegaron {len(dias)}")
     anterior = None
-    for d in dias:
-        if d.get("contributionLevel") not in NIVELES or d.get("weekday") not in range(7):
-            raise ErrorDatos(f"día inválido: {d}")
-        fecha = datetime.date.fromisoformat(d["date"])
-        if fecha.weekday() != (d["weekday"] - 1) % 7:
-            raise ErrorDatos(f"weekday no coincide con la fecha: {d}")
+    for i, d in enumerate(dias):
+        try:
+            weekday = d["weekday"]
+            if d["contributionLevel"] not in NIVELES or isinstance(weekday, bool) or weekday not in range(7):
+                raise ErrorDatos(f"día {i}: nivel o weekday inválido")
+            fecha = datetime.date.fromisoformat(d["date"])
+        except (KeyError, TypeError, ValueError):
+            raise ErrorDatos(f"día {i}: campos inválidos") from None
+        if fecha.weekday() != (weekday - 1) % 7:
+            raise ErrorDatos(f"día {i}: weekday no coincide con la fecha")
         if anterior and fecha - anterior != datetime.timedelta(days=1):
-            raise ErrorDatos(f"días no consecutivos: {anterior} → {fecha}")
+            raise ErrorDatos(f"día {i}: no es consecutivo al anterior")
         anterior = fecha
     return [[(d["weekday"], d["contributionLevel"]) for d in s["contributionDays"]] for s in semanas]
 
@@ -186,8 +196,11 @@ def main():
             semanas = semanas_vacias()
         else:
             if args.entrada:
-                with open(args.entrada, encoding="utf-8") as f:
-                    respuesta = json.load(f)
+                try:
+                    with open(args.entrada, encoding="utf-8") as f:
+                        respuesta = json.load(f)
+                except (OSError, ValueError):
+                    raise ErrorDatos("no se pudo leer la entrada") from None
             else:
                 token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
                 if not token:
