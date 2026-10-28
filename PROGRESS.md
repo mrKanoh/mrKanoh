@@ -1,8 +1,8 @@
 # Progreso
 
 ## Trabajo actual: GHP-PERFIL-2 Escritorio retro  (rama tarea/perfil-retro-2)
-- Etapas: [x] 1 rama, etiqueta antes-de-perfil-retro-2 y decisiones (commit fa64e08) · [x] 2 banners como ventana con barra «AMR» · [ ] 3 tres ventanas-enlace + README
-- Ciclo: etapas aprobadas 1, auditoría pendiente, rondas sin dato
+- Etapas: [x] 1 rama, etiqueta antes-de-perfil-retro-2 y decisiones (commit fa64e08) · [x] 2 banners como ventana con barra «AMR» (commits 31bab8f y corrección de escala de la barra: etiqueta 46 u, barra 84 u) · [ ] 3 tres ventanas-enlace + README
+- Ciclo: etapas aprobadas 1, auditoría pendiente, rondas 1
 - Línea base de pruebas: sin pruebas automáticas; verificación manual (ver AGENTS.md)
 - Pendiente / bloqueos: ninguno
 - Siguiente: GHP-PERFIL-3 (desfragmentador de actividad; solo registrado en DECISIONS.md)
