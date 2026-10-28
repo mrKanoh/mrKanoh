@@ -8,6 +8,7 @@
   - Cargo: «Full Stack Developer con foco en Frontend».
   - Frase: «Aquí están mis proyectos de código en GitHub. Los casos UX/UI y el CV están en elari.work.»
 - **Temas:** versión clara y oscura del banner, elegidas con `<picture>` según el tema de GitHub.
+  - Fuente del patrón: https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax (sección «The Picture element»: solo dice que `<picture>` está soportado) y el ejemplo oficial en https://github.blog/changelog/2022-08-15-specify-theme-context-for-images-in-markdown-ga.
 - **Repo:** `mrKanoh/mrKanoh` (público, mismo nombre que el usuario, como exige GitHub para el README de perfil). Lo crea el trabajador con `gh` al cierre de GHP-PERFIL-1.
 
 ## 2026-10-27 — Diseño del banner (GHP-PERFIL-1, etapa 2; propuesta del trabajador, aceptada por el orquestador)
