@@ -9,3 +9,5 @@ Aquí están mis proyectos de código en GitHub. Los casos UX/UI y el CV están 
 <a href="https://mrkanoh.github.io"><img src="assets/ventana-archivos.svg" width="270" height="124" alt="Proyectos de código"></a>
 <a href="https://elari.work"><img src="assets/ventana-espacio-de-trabajo.svg" width="270" height="124" alt="Portafolio UX/UI"></a>
 <a href="https://elari.work/cv/"><img src="assets/ventana-cv.svg" width="270" height="124" alt="CV"></a>
+
+<img src="assets/ventana-desfragmentador.svg" width="830" height="312" alt="Actividad del último año en GitHub, mostrada como el mapa de bloques de un desfragmentador de disco">
