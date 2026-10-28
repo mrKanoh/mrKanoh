@@ -1,8 +1,8 @@
 # Progreso
 
 ## Trabajo actual: GHP-PERFIL-1 README de perfil  (rama tarea/perfil-readme-1)
-- Etapas: [x] 1 base del método (commit aab9e18 en `main`) · [x] 2 banner (commit de esta etapa en `tarea/perfil-readme-1`) · [ ] 3 README · [ ] 4 publicación
-- Ciclo: etapas aprobadas 1, auditoría pendiente, rondas 0
+- Etapas: [x] 1 base del método (commit aab9e18 en `main`) · [x] 2 banner (commit 8d0aa61) · [x] 3 README (commit de esta etapa en `tarea/perfil-readme-1`) · [ ] 4 publicación
+- Ciclo: etapas aprobadas 2, auditoría pendiente, rondas 0
 - Línea base de pruebas: el proyecto no tiene pruebas ni scripts; la verificación es manual con evidencia (ver «Cómo verificar» en `AGENTS.md`).
 - Pendiente / bloqueos: ninguno.
 ### Orden completa
