@@ -6,7 +6,7 @@ Solo biblioteca estándar de Python 3. Uso:
   python scripts/desfragmentador.py --entrada respuesta.json --salida tmp/x.svg
 
 Si la consulta falla o la respuesta no trae un año de días y su total de
-contribuciones (entero ≥ 0), sale con código 1 y no escribe el SVG. Misma entrada → mismos bytes.
+contribuciones (entero 0–9 999 999), sale con código 1 y no escribe el SVG. Misma entrada → mismos bytes.
 """
 import argparse
 import datetime
