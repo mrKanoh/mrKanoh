@@ -1,10 +1,10 @@
 # Progreso
 
 ## Trabajo actual: GHP-PERFIL-3 desfragmentador  (rama tarea/perfil-desfrag-3)
-- Etapas: [x] 1 generador y SVG (commit: este) · [ ] 2 workflow, README y AGENTS.md · [ ] 3 cierre
-- Ciclo: sin dato
+- Etapas: [x] 1 generador y SVG (commit e344802) · [x] 2 workflow, README y AGENTS.md (commit: este) · [ ] 3 cierre
+- Ciclo: etapas aprobadas 1, auditoría pendiente, rondas 0
 - Línea base de pruebas: el proyecto no tiene pruebas automáticas; verificación manual (AGENTS.md).
-- Pendiente / bloqueos: revisión de la etapa 1 por el orquestador. actionlint y gitleaks no están instalados.
+- Pendiente / bloqueos: revisión de la etapa 2 y auditoría de riesgo del workflow por el orquestador. Barra carbón pendiente de confirmación de Ariel. Protección de `main` no leída.
 ### Orden completa
 ```
 Proyecto: profile-github — D:\Proyectos\profile-github
