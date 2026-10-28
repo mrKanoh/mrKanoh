@@ -20,7 +20,8 @@
 
 ## 2026-10-28 — Escritorio retro (GHP-PERFIL-2; aprobado por Ariel)
 
-- **Composición:** el banner actual dentro de una ventana con barra de título azul «AMR»; debajo de la frase, tres ventanas SVG que son los enlaces a Proyectos, Portafolio UX/UI y CV. Estética coherente con elari.work: ventana con borde carbón 1 px, cuerpo marfil #f1ece8, barra de 32 px con etiqueta en IBM Plex Mono 12 px mayúsculas.
+- **Composición:** el banner actual dentro de una ventana con barra de título azul «AMR»; debajo de la frase, tres ventanas SVG que son los enlaces a Proyectos, Portafolio UX/UI y CV. Estética coherente con elari.work: ventana con borde carbón, cuerpo marfil #f1ece8, barra con etiqueta en IBM Plex Mono mayúsculas.
+- **Escala:** las medidas se fijan por legibilidad al ancho en que GitHub muestra la imagen (≈ 343–830 px), no en px de elari.work (borde 1 px, barra 32 px, etiqueta 12 px), que dentro de un SVG escalado no se conservan. Banner (viewBox 1280 × 404; corrección ab804af): barra de 84 unidades con etiqueta de 46 (≈ 13 px a 343 px) y borde de 3. Ventanas-enlace (270 × 124, mostradas a 270 px): barra de 36, etiqueta de 13, cuerpo en Inter 600 de 19, borde de 1.
 - **Textos aprobados (exactos):**
   - Barra del banner: «AMR» (de `site.ts` de mrkanoh.github.io). Banner, nombre y cargo sin cambios; frase sin cambios.
   - Ventana 1: barra azul #2563eb «ARCHIVOS»; cuerpo «Proyectos de código ↗»; enlace https://mrkanoh.github.io.
