@@ -11,3 +11,7 @@ Aquí están mis proyectos de código en GitHub. Los casos UX/UI y el CV están 
 <a href="https://elari.work/cv/"><img src="assets/ventana-cv.svg" width="270" height="124" alt="CV"></a>
 
 <img src="assets/ventana-desfragmentador.svg" width="830" height="312" alt="Actividad del último año en GitHub, mostrada como el mapa de bloques de un desfragmentador de disco">
+
+<img src="assets/ventana-panel-de-control.svg" width="830" height="510" alt="Panel de control con las herramientas que uso: HTML, CSS, JavaScript, TypeScript, React, Astro, Node.js, Tailwind, Git, Python, Figma y FigJam">
+
+<img src="assets/barra-de-tareas.svg" width="830" height="72" alt="Barra de tareas retro con el botón Inicio y el año 2026">
